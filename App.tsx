@@ -1,20 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Provider as PaperProvider } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import UserScreen from "./src/screens/app-screens/UserScreen";
+import AdminScreen from "./src/screens/app-screens/AdminScreen";
+import WelcomeScreen from "./src/screens/WelcomeScreen";
+import Login from "./src/screens/auth-screens/Login";
+import Signup from "./src/screens/auth-screens/Signup";
+import { useEffect, useState } from "react";
+import { getData, removeData } from "./src/helpers/asyncStorageFuncs";
+import Loading from "./src/components/Loading";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  const [userID, setUserID] = useState<any>();
+  // removeData("USER");
+  useEffect(() => {
+    getData().then((id) => {
+      console.log(id);
+      setUserID(id);
+    });
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <PaperProvider>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {userID ? (
+            <>
+              <Stack.Screen name="user" component={UserScreen} />
+              <Stack.Screen name="admin" component={AdminScreen} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="welcome" component={WelcomeScreen} />
+              <Stack.Screen name="login" component={Login} />
+              <Stack.Screen name="signup" component={Signup} />
+            </>
+          )}
+        </Stack.Navigator>
+      </PaperProvider>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
