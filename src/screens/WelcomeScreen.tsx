@@ -9,14 +9,15 @@ const WelcomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     <View style={styles.mainContainer}>
       <View style={styles.upperPart}>
         <AppLogo />
+        <Text style={styles.mainText}>Health App</Text>
       </View>
 
       <Text
         style={{
           color: "white",
-          fontSize: 22,
+          fontSize: 23,
           fontWeight: "bold",
-          paddingBottom: 10,
+          paddingBottom: 5,
         }}
       >
         Welcome to Health App
@@ -27,12 +28,11 @@ const WelcomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           fontSize: 19,
           textAlign: "center",
           lineHeight: 20,
-          paddingBottom: 40,
+          paddingBottom: 30,
         }}
       >
-        Health App is an app made for people to monitor their blood sugar,
-        oxygen saturation, heart rate and more, from today you won't be fat
-        again :)
+        Health App is an app made to monitor patient's Glucose levels, Oxygen
+        saturation, Heart rate and more, from today you won't be fat again :)
       </Text>
 
       <Button
@@ -47,13 +47,22 @@ const WelcomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
       <Button
         color="#fff"
-        style={styles.authButton}
+        style={{ ...styles.authButton, marginTop: 10 }}
         onPress={() => {
           navigation.navigate("login");
         }}
       >
         Sign in
       </Button>
+
+      <Text
+        style={styles.adminText}
+        onPress={() => {
+          navigation.navigate("admin-login");
+        }}
+      >
+        access Admin account here
+      </Text>
     </View>
   );
 };
@@ -71,12 +80,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#1482fd",
     alignItems: "center",
     paddingTop: "30%",
-    marginBottom: 35,
+    marginBottom: 25,
   },
   authButton: {
     backgroundColor: "#1482fd",
     borderRadius: 50,
-    marginBottom: 15,
+  },
+  adminText: {
+    color: "#1482fd",
+    fontSize: 18,
+    marginTop: 15,
+  },
+  mainText: {
+    color: "#fff",
+    fontSize: 35,
+    fontWeight: "bold",
+    margin: 5,
+    textShadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    textShadowColor: "#1D1D1D",
+    textShadowRadius: 5,
   },
 });
 

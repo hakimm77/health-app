@@ -18,13 +18,10 @@ const data = [
 
 const UserScreen = () => {
   const [modal, setModal] = useState(false);
-  const [userID, setUserID] = useState<string | false | null>();
   const [userInfo, setUserInfo] = useState<UserType>();
 
   useEffect(() => {
     getData().then((id) => {
-      setUserID(id);
-
       if (id) {
         getAccountInfo(id).then((e) => {
           setUserInfo(e.personalData);
@@ -108,6 +105,7 @@ const styles = StyleSheet.create({
     width: "90%",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 15,
   },
 });
 

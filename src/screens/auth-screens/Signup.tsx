@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,14 +11,16 @@ import {
 import { Button } from "react-native-paper";
 import { initialStyle } from "../../../constants";
 import AppLogo from "../../components/AppLogo";
+import BackArrowButton from "../../components/BackArrowButton";
 import { signup } from "../../helpers/auth";
 
-const Signup = () => {
+const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [inputActive, setInputActive] = useState(false);
 
   const handleSignup = async () => {
     setError(null);
@@ -35,6 +37,16 @@ const Signup = () => {
     setPassword("");
   };
 
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", () => {
+      setInputActive(true);
+    });
+
+    Keyboard.addListener("keyboardDidHide", () => {
+      setInputActive(false);
+    });
+  }, []);
+
   return (
     <TouchableWithoutFeedback
       style={{ flex: 1 }}
@@ -42,9 +54,29 @@ const Signup = () => {
       accessible={false}
     >
       <View style={styles.mainContainer}>
-        <View style={styles.appLogo}>
-          <AppLogo />
-        </View>
+        <BackArrowButton
+          navigation={navigation}
+          close={() => {
+            Keyboard.removeAllListeners("keyboardDidShow");
+            Keyboard.removeAllListeners("keyboardDidHide");
+          }}
+        />
+
+        {!inputActive && (
+          <View style={styles.appLogo}>
+            <AppLogo />
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 30,
+                fontWeight: "bold",
+                margin: 5,
+              }}
+            >
+              Sign up
+            </Text>
+          </View>
+        )}
 
         <TextInput
           placeholder="Username..."

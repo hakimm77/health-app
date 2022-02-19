@@ -9,7 +9,7 @@ import * as Updates from "expo-updates";
 const AccountPageModel: React.FC<{
   closeModal: () => void;
   modal: boolean;
-  userData: UserType;
+  userData?: UserType;
 }> = ({ closeModal, modal, userData }) => {
   const logout = async () => {
     removeData("USER");
@@ -24,37 +24,64 @@ const AccountPageModel: React.FC<{
             &#x2715;
           </Text>
 
-          <View
-            style={{
-              alignItems: "center",
-              backgroundColor: "white",
-              padding: 10,
-              borderRadius: 10,
-            }}
-          >
-            <Text style={{ fontSize: 20, color: "#313131" }}>
-              {userData.username}
-            </Text>
+          {userData && (
+            <View style={styles.userDataContainer}>
+              <View
+                style={{
+                  marginBottom: 30,
+                  alignItems: "center",
+                }}
+              >
+                <View style={styles.profilePic}>
+                  <Text style={{ color: "white", fontSize: 60 }}>
+                    {userData.username.split("")[0]}
+                  </Text>
+                </View>
 
-            <Text style={{ fontSize: 20, color: "#313131" }}>
-              {userData.email}
-            </Text>
-          </View>
+                <Text
+                  style={{
+                    color: "#1482fd",
+                    fontSize: 18,
+                    margin: 10,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Edit (will be available soon)
+                </Text>
+              </View>
 
-          <View
-            style={{
-              position: "absolute",
-              bottom: 0,
-            }}
-          >
-            <Button
-              color="white"
-              style={{ backgroundColor: "#1482fd", margin: 20, width: 100 }}
-              onPress={logout}
-            >
-              Logout
-            </Button>
-          </View>
+              <Text style={{ fontSize: 20, color: "#fff", marginBottom: 7 }}>
+                <Text
+                  style={{ fontSize: 20, color: "#fff", fontWeight: "bold" }}
+                >
+                  username:
+                </Text>{" "}
+                {userData.username}
+              </Text>
+
+              <Text style={{ fontSize: 20, color: "#fff" }}>
+                <Text
+                  style={{ fontSize: 20, color: "#fff", fontWeight: "bold" }}
+                >
+                  email:
+                </Text>{" "}
+                {userData.email}
+              </Text>
+
+              <Button
+                color="white"
+                style={{
+                  backgroundColor: "#1482fd",
+                  width: 100,
+                  marginTop: 50,
+                  alignSelf: "center",
+                }}
+                onPress={logout}
+              >
+                Logout
+              </Button>
+            </View>
+          )}
         </View>
       </Modal>
     </GestureRecognizer>
@@ -64,10 +91,9 @@ const AccountPageModel: React.FC<{
 const styles = StyleSheet.create({
   mainContainer: {
     position: "absolute",
-    height: "90%",
+    height: "85%",
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#313131",
     bottom: 0,
     borderTopLeftRadius: 20,
@@ -79,6 +105,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 5,
     right: 20,
+  },
+  userDataContainer: {
+    backgroundColor: "#4b4b4b",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 100,
+  },
+  profilePic: {
+    width: 120,
+    height: 120,
+    borderRadius: 120 / 2,
+    borderColor: "#fff",
+    borderWidth: 3,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

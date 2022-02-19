@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,10 +11,9 @@ import { Button } from "react-native-paper";
 import { initialStyle } from "../../../constants";
 import AppLogo from "../../components/AppLogo";
 import BackArrowButton from "../../components/BackArrowButton";
-import { login } from "../../helpers/auth";
+import { adminLogin, login } from "../../helpers/auth";
 
-const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [email, setEmail] = useState("");
+const AdminLogin: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,20 +22,17 @@ const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
   const handleLogin = async () => {
     setError(null);
 
-    await login(email.trim(), password.trim(), setLoading, setError);
-    setEmail("");
+    await adminLogin(password.trim(), setLoading, setError);
     setPassword("");
   };
 
-  useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", () => {
-      setInputActive(true);
-    });
+  Keyboard.addListener("keyboardDidShow", () => {
+    setInputActive(true);
+  });
 
-    Keyboard.addListener("keyboardDidHide", () => {
-      setInputActive(false);
-    });
-  }, []);
+  Keyboard.addListener("keyboardDidHide", () => {
+    setInputActive(false);
+  });
 
   return (
     <TouchableWithoutFeedback
@@ -64,23 +60,15 @@ const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
                 margin: 5,
               }}
             >
-              Sign in
+              Access admin
             </Text>
           </View>
         )}
 
         <TextInput
-          placeholder="Email..."
-          placeholderTextColor="gray"
-          style={{ ...styles.textInput, marginTop: 80 }}
-          onChangeText={setEmail}
-          value={email}
-          autoCapitalize="none"
-        />
-        <TextInput
           placeholder="Password..."
           placeholderTextColor="gray"
-          style={styles.textInput}
+          style={{ ...styles.textInput, marginTop: 80 }}
           onChangeText={setPassword}
           value={password}
           autoCapitalize="none"
@@ -135,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default AdminLogin;

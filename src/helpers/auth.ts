@@ -27,6 +27,8 @@ export const login = async (
       saveData(response);
       await Updates.reloadAsync();
     }
+  } else {
+    setError("Please complete the inputs");
   }
 };
 
@@ -58,5 +60,36 @@ export const signup = async (
       saveData(response);
       await Updates.reloadAsync();
     }
+  } else {
+    setError("Please complete the inputs");
+  }
+};
+
+export const adminLogin = async (
+  password: string,
+  setLoading: React.Dispatch<SetStateAction<boolean>>,
+  setError: React.Dispatch<SetStateAction<string | null>>
+) => {
+  if (password) {
+    setLoading(true);
+
+    const response = await fetchServer("/authenticate", "POST", {
+      email: "",
+      password: password,
+      info: "",
+      isAdmin: true,
+      authType: "admin",
+    });
+
+    if (response.code) {
+      setLoading(false);
+      setError(response.code);
+    } else {
+      setLoading(false);
+      saveData(response);
+      await Updates.reloadAsync();
+    }
+  } else {
+    setError("Please complete the inputs");
   }
 };
