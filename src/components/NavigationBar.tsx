@@ -11,10 +11,6 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import { NavItemType } from "../types/navItemsType";
 import MedicalData from "./MedicalData";
 
-const NavItem: React.FC<{ item: NavItemType }> = ({ item }) => {
-  return <MedicalData item={item} />;
-};
-
 const NavigationBar = () => {
   const [navItems, setNavItems] = useState<Array<NavItemType>>([
     { name: "Glucose Monitoring", value: "4 mmol/L" },
@@ -25,11 +21,18 @@ const NavigationBar = () => {
   ]);
   const carouselRef: any = useRef();
 
+  const NavItem: React.FC<{ item: NavItemType; index: number }> = ({
+    item,
+    index,
+  }) => {
+    return <MedicalData item={item} index={index} carouselRef={carouselRef} />;
+  };
+
   return (
     <View style={styles.mainContainer}>
       <Carousel
         ref={carouselRef}
-        data={navItems as any}
+        data={navItems}
         renderItem={NavItem}
         sliderWidth={580}
         itemWidth={550}
