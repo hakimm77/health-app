@@ -7,7 +7,7 @@ import WelcomeScreen from "./src/screens/WelcomeScreen";
 import Login from "./src/screens/auth-screens/Login";
 import Signup from "./src/screens/auth-screens/Signup";
 import { useEffect, useState } from "react";
-import { getData, removeData } from "./src/helpers/asyncStorageFuncs";
+import { getData, removeData, saveData } from "./src/helpers/asyncStorageFuncs";
 import Loading from "./src/components/Loading";
 import AdminLogin from "./src/screens/auth-screens/AdminLogin";
 
@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   const [userID, setUserID] = useState<any>(null);
   useEffect(() => {
-    getData().then((id) => {
+    getData("USER").then((id) => {
       console.log(id);
       setUserID(id);
     });

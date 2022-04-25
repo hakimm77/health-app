@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { initialStyle } from "../../../constants";
 import AppLogo from "../../components/AppLogo";
 import NavigationBar from "../../components/NavigationBar";
@@ -21,10 +27,10 @@ const UserScreen = () => {
   const [userInfo, setUserInfo] = useState<UserType>();
 
   useEffect(() => {
-    getData().then((id) => {
+    getData("USER").then((id) => {
       if (id) {
         getAccountInfo(id).then((e) => {
-          setUserInfo(e.personalData);
+          setUserInfo(e);
         });
       }
     });
@@ -37,17 +43,17 @@ const UserScreen = () => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.upperPart}>
-        <Text
-          style={styles.accountText}
+        <TouchableOpacity
+          style={{ position: "absolute", top: 40, left: 15 }}
           onPress={() => {
             setModal(true);
           }}
         >
-          Account
-        </Text>
+          <Text style={styles.accountText}>Account</Text>
+        </TouchableOpacity>
         <AppLogo style={styles.appLogo} width={50} height={50} />
 
-        <NavigationBar />
+        <NavigationBar username={userInfo?.username} />
       </View>
 
       <View style={styles.graphWrapper}>
@@ -82,9 +88,6 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   accountText: {
-    position: "absolute",
-    top: 40,
-    left: 15,
     color: "white",
     fontWeight: "bold",
     fontSize: 18,

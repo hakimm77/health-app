@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -7,18 +7,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import Carousel, { Pagination } from "react-native-snap-carousel";
+import { getData } from "../helpers/asyncStorageFuncs";
+import fetchServer from "../helpers/fetchServer";
 import { NavItemType } from "../types/navItemsType";
 import MedicalData from "./MedicalData";
 
-const NavigationBar = () => {
+const NavigationBar = ({ username }: { username: string | undefined }) => {
   const [navItems, setNavItems] = useState<Array<NavItemType>>([
-    { name: "Glucose Monitoring", value: "4 mmol/L" },
+    { name: "Glucose Monitoring", value: "--- mg/dl" },
     { name: "Heart Rate", value: "75 BPM" },
     { name: "Weight", value: "70 KG" },
     { name: "Oxygen Saturation", value: "97%" },
     { name: "Sleep Quality", value: "86%" },
   ]);
+  const [gcmValue, setGcmValue] = useState<any>();
   const carouselRef: any = useRef();
 
   const NavItem: React.FC<{ item: NavItemType; index: number }> = ({
@@ -28,29 +32,63 @@ const NavigationBar = () => {
     return <MedicalData item={item} index={index} carouselRef={carouselRef} />;
   };
 
+  useEffect(() => {
+    getData("REFRESH_TOKEN").then((id) => {
+      if (id && username) {
+        const response = fetchServer("/get-glucose", "POST", {
+          username: username,
+        }).then((res) => {
+          if (res.fault) {
+            fetchServer("/refresh-token", "POST", {
+              username: username,
+              refreshToken: id,
+            });
+            username = username;
+          } else {
+            console.log(res.egvs[0]);
+            setGcmValue(`${res.egvs[0].value} ${res.unit}`);
+          }
+        });
+      }
+    });
+  }, [username]);
+
   return (
     <View style={styles.mainContainer}>
-      <Carousel
+      {/* <Carousel
         ref={carouselRef}
         data={navItems}
         renderItem={NavItem}
         sliderWidth={580}
         itemWidth={550}
         layout="stack"
-      />
+      /> */}
+      <View style={styles.mainContainer}>
+        <Text style={{ fontWeight: "bold", fontSize: 30, marginBottom: 20 }}>
+          Glucose Monitoring
+        </Text>
+
+        {gcmValue ? (
+          <Text style={{ fontWeight: "bold", fontSize: 25 }}>{gcmValue}</Text>
+        ) : (
+          <ActivityIndicator color="#1D1D1D" size="small" />
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {
-    width: "100%",
+    backgroundColor: "white",
+    width: "95%",
     height: "80%",
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 15,
+    borderRadius: 10,
   },
   navItem: {
     color: "white",

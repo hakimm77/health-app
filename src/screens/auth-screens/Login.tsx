@@ -24,8 +24,6 @@ const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
     setError(null);
 
     await login(email.trim(), password.trim(), setLoading, setError);
-    setEmail("");
-    setPassword("");
   };
 
   useEffect(() => {

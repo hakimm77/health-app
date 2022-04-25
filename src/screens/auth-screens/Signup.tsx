@@ -7,12 +7,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Linking,
 } from "react-native";
 import { Button } from "react-native-paper";
 import { initialStyle } from "../../../constants";
 import AppLogo from "../../components/AppLogo";
 import BackArrowButton from "../../components/BackArrowButton";
 import { signup } from "../../helpers/auth";
+import ConnectionModal from "./ConnectionModal";
 
 const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -21,20 +23,20 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [inputActive, setInputActive] = useState(false);
+  const [connectionModal, setConnectionModal] = useState(false);
 
-  const handleSignup = async () => {
+  const handleDexcomConnect = () => {
     setError(null);
 
-    await signup(
-      email.trim(),
-      password.trim(),
-      username.trim(),
-      setError,
-      setLoading
-    );
+    if (email && username && password) {
+      setConnectionModal(true);
 
-    setEmail("");
-    setPassword("");
+      Linking.openURL(
+        `https://api.dexcom.com/v2/oauth2/login?client_id=MtO4CwJyz9yXacjPiH7kuHKNXKnY4HaE&redirect_uri=https://polar-river-98280.herokuapp.com/connect-dexcom&response_type=code&scope=offline_access&state=${username}`
+      );
+    } else {
+      setError("Please complete all the input fileds and try again.");
+    }
   };
 
   useEffect(() => {
@@ -89,7 +91,9 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
         <TextInput
           placeholder="Email..."
           placeholderTextColor="gray"
-          style={{ ...styles.textInput }}
+          style={{
+            ...styles.textInput,
+          }}
           onChangeText={setEmail}
           value={email}
           autoCapitalize="none"
@@ -112,16 +116,35 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
             marginBottom: 20,
           }}
           loading={loading}
-          onPress={handleSignup}
+          onPress={handleDexcomConnect}
         >
           Create account
         </Button>
 
         {error && (
-          <Text style={{ color: "red", fontSize: 17, fontWeight: "bold" }}>
+          <Text
+            style={{
+              color: "red",
+              fontSize: 17,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
             {error}
           </Text>
         )}
+
+        {!error && email && username && password ? (
+          <ConnectionModal
+            visible={connectionModal}
+            closeModal={() => {
+              setConnectionModal(false);
+            }}
+            userData={{ username: username, email: email, password: password }}
+            setError={setError}
+            setLoading={setLoading}
+          />
+        ) : null}
       </View>
     </TouchableWithoutFeedback>
   );

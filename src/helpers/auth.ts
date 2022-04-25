@@ -24,7 +24,7 @@ export const login = async (
       setError(response.code);
     } else {
       setLoading(false);
-      saveData(response);
+      saveData("USER", response);
       await Updates.reloadAsync();
     }
   } else {
@@ -56,8 +56,9 @@ export const signup = async (
       setLoading(false);
       setError(response.code);
     } else {
+      console.log(response);
       setLoading(false);
-      saveData(response);
+      saveData("USER", response);
       await Updates.reloadAsync();
     }
   } else {
@@ -86,7 +87,7 @@ export const adminLogin = async (
       setError(response.code);
     } else {
       setLoading(false);
-      saveData(response);
+      saveData("USER", response);
       await Updates.reloadAsync();
     }
   } else {
