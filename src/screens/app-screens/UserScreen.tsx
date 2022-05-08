@@ -9,25 +9,19 @@ import {
 import { initialStyle } from "../../../constants";
 import AppLogo from "../../components/AppLogo";
 import NavigationBar from "../../components/NavigationBar";
-import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native";
 import AccountPageModel from "../../components/AccountPageModel";
 import { getData } from "../../helpers/asyncStorageFuncs";
 import { getAccountInfo } from "../../helpers/database";
 import { UserType } from "../../types/userType";
 
-const data = [
-  { month: "Jan", level: 11.0 },
-  { month: "Feb", level: 7.08 },
-  { month: "Mar", level: 11.1 },
-  { month: "Apr", level: 10.13 },
-];
-
 const UserScreen = () => {
+  const { width, height } = Dimensions.get("window");
   const [modal, setModal] = useState(false);
   const [userInfo, setUserInfo] = useState<UserType>();
 
   useEffect(() => {
     getData("USER").then((id) => {
+      console.log(id);
       if (id) {
         getAccountInfo(id).then((e) => {
           setUserInfo(e);
@@ -57,9 +51,18 @@ const UserScreen = () => {
       </View>
 
       <View style={styles.graphWrapper}>
-        <VictoryChart width={280} height={300} theme={VictoryTheme.material}>
+        {/* <VictoryChart width={280} height={300} theme={VictoryTheme.material}>
           <VictoryBar data={data} x="month" y="level" />
-        </VictoryChart>
+        </VictoryChart> */}
+
+        {/* <LineChart
+          data={data}
+          width={width - 20}
+          height={100}
+          verticalLabelRotation={30}
+          chartConfig={{}}
+          bezier
+        /> */}
       </View>
 
       {userInfo && (

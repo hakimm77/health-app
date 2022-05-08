@@ -24,6 +24,7 @@ const NavigationBar = ({ username }: { username: string | undefined }) => {
   ]);
   const [gcmValue, setGcmValue] = useState<any>();
   const carouselRef: any = useRef();
+  const [timer, setTimer] = useState(0);
 
   const NavItem: React.FC<{ item: NavItemType; index: number }> = ({
     item,
@@ -32,26 +33,46 @@ const NavigationBar = ({ username }: { username: string | undefined }) => {
     return <MedicalData item={item} index={index} carouselRef={carouselRef} />;
   };
 
-  useEffect(() => {
+  const getDexcomMeasure = () => {
     getData("REFRESH_TOKEN").then((id) => {
-      if (id && username) {
-        const response = fetchServer("/get-glucose", "POST", {
-          username: username,
-        }).then((res) => {
-          if (res.fault) {
-            fetchServer("/refresh-token", "POST", {
-              username: username,
-              refreshToken: id,
-            });
-            username = username;
-          } else {
-            console.log(res.egvs[0]);
-            setGcmValue(`${res.egvs[0].value} ${res.unit}`);
-          }
-        });
-      }
+      getData("USER").then((userID) => {
+        if (id && username && userID) {
+          const response = fetchServer("/get-glucose", "POST", {
+            username: username,
+          }).then((res) => {
+            if (res.fault) {
+              fetchServer("/refresh-token", "POST", {
+                username: username,
+                refreshToken: id,
+              });
+              setTimer((p) => p + 1);
+            } else {
+              fetchServer("/save-results", "POST", {
+                uid: userID,
+                data: res.egvs.slice(-5),
+              });
+              console.log(res);
+              setGcmValue(`${res.egvs[0].value} ${res.unit}`);
+            }
+            console.log(res);
+          });
+        }
+      });
     });
-  }, [username]);
+  };
+
+  const interval = () => {
+    getDexcomMeasure();
+
+    setTimeout(() => {
+      getDexcomMeasure();
+      setTimer((p) => p + 1);
+    }, 300000);
+  };
+
+  useEffect(() => {
+    interval();
+  }, [timer, username]);
 
   return (
     <View style={styles.mainContainer}>

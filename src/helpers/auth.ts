@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { SetStateAction } from "react";
-import { saveData } from "./asyncStorageFuncs";
+import { getData, saveData } from "./asyncStorageFuncs";
 import fetchServer from "./fetchServer";
 import * as Updates from "expo-updates";
+import { getDoc } from "firebase/firestore";
+
+//export const userID = getData("USER");
 
 export const login = async (
   email: string,

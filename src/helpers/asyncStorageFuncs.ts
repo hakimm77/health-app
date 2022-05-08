@@ -13,12 +13,12 @@ export const getData = async (key: string) => {
     const data = await AsyncStorage.getItem(key);
 
     if (data !== null) {
-      return data;
+      return data as string;
     } else {
-      return false;
+      return "";
     }
   } catch (err) {
-    return null;
+    return "";
   }
 };
 
@@ -26,6 +26,6 @@ export const removeData = async (item: string) => {
   try {
     await AsyncStorage.removeItem(item);
   } catch (err) {
-    return null;
+    return "";
   }
 };

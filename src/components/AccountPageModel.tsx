@@ -13,6 +13,7 @@ const AccountPageModel: React.FC<{
 }> = ({ closeModal, modal, userData }) => {
   const logout = async () => {
     removeData("USER");
+    removeData("REFRESH_TOKEN");
     await Updates.reloadAsync();
   };
 

@@ -1,7 +1,7 @@
 import { SERVER_URL } from "../../constants";
 
-const fetchServer = async (url: string, method: string, data: any) => {
-  const response = await fetch(`${SERVER_URL + url}`, {
+const fetchServer = async (url: string, method: string, data?: any) => {
+  const response = await fetch(`${"http://192.168.1.14:4000" + url}`, {
     method: method,
     mode: "cors",
     cache: "no-cache",
@@ -11,7 +11,7 @@ const fetchServer = async (url: string, method: string, data: any) => {
     },
     redirect: "follow",
     referrerPolicy: "no-referrer",
-    body: JSON.stringify(data),
+    body: data ? JSON.stringify(data) : "",
   });
 
   return response.json();
