@@ -1,18 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import UserPage from "./src/screen/UserPage";
+import { Provider as PaperProvider } from "react-native-paper";
+import { View } from "react-native";
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <PaperProvider>
+      <UserPage />
+    </PaperProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffe7e8",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App;
